@@ -157,22 +157,12 @@ func (p *XrayProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		)
 	}
 
-	version, err := util.GetXrayVersion(restyClient)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error getting Xray version",
-			err.Error(),
-		)
-		return
-	}
-
 	featureUsage := fmt.Sprintf("Terraform/%s", req.TerraformVersion)
 	go util.SendUsage(ctx, restyClient.R(), productId, featureUsage)
 
 	meta := util.ProviderMetadata{
-		Client:      restyClient,
-		ProductId:   productId,
-		XrayVersion: version,
+		Client:    restyClient,
+		ProductId: productId,
 	}
 
 	p.Meta = meta
